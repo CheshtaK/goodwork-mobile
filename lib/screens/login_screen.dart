@@ -3,6 +3,8 @@ import 'package:flutter/painting.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:goodwork/blocs/auth/auth_bloc.dart';
 import 'package:goodwork/blocs/auth/auth_event.dart';
+import 'dart:io';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -15,6 +17,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+
+    checkConnectivity();
+
     return SafeArea(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(36.0, 20.0, 36.0, 0.0),
@@ -132,5 +137,18 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+
+  void checkConnectivity() async {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        //print('connected');
+      }
+    } on SocketException catch (_) {
+      Fluttertoast.showToast(
+        msg: 'No network available. Please turn on your wifi or cellular network',
+      );
+    }
   }
 }
